@@ -1,14 +1,29 @@
+# Get the score for how much of our sample, x, is between the lower and upper bound.
+# prob = probability (proportion) of sample that should be in the range.
+# Score is the difference between the actual and the ideal.
+# score = 0 means it's perfect
+# score > 0 means that number too many in the range.
+# score < 0 means that number too few in the range.
 
-## What proportion of a vector is between the lower and upper bound?
-
-proportionInRange <- function(lower, upper, x) {
-  length( x[lower <= x & x <= upper] ) / length(x)
+scoreForInterval <- function(prob, lower, upper, x) {
+  expected <- prob * length(x)
+  actual <- length( x[lower <= x & x <= upper] )
+  actual - expected
 }
 
 # Add an interval to a matrix of intervals.
 # The nth interval can be accessed by intervals[,n]
 # The probabilites can be accessed by intervals["prob",]
 # The number of intervals can be accessed by ncol(intervals)
+
+# Get the scores for all the intervals against a given sample, x
+
+scores <- function(intervals, x) {
+  sapply(
+    1:ncol(intervals)
+    , function(i) scoreForInterval(intervals["prob", i], intervals["lower", i], intervals["upper", i], x)
+  )
+}
 
 addInterval <- function(intervals, prob, lower, upper) {
   len = length(intervals)
