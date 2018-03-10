@@ -37,6 +37,42 @@ addInterval <- function(intervals, prob, lower, upper) {
   intervals
 }
 
+# Redistribute the sample once, using the following algorithm:
+#   - Pick the intervals with the lowest and highest score.
+#   - Calculate the average of their absolute scores.
+#   - Redistribute that many samples from the 'high' interval
+#     to the 'low' one.
+
+redistributeOnce <- function(intervals, x) {
+  scores <- scores(intervals, x)
+  cat("scores = ", scores, "\n")
+  minmax <- range( scores )
+  min <- minmax[1]
+  max <- minmax[2]
+  minIdx <- match(min, scores)
+  maxIdx <- match(max, scores)
+  fromProb <- intervals["prob", maxIdx]
+  fromLower <- intervals["lower", maxIdx]
+  fromUpper <- intervals["upper", maxIdx]
+  toProb <- intervals["prob", minIdx]
+  toLower <- intervals["lower", minIdx]
+  toUpper <- intervals["upper", minIdx]
+  cat("(", fromLower, ", ", fromUpper, ") -> (", toLower, ", ", toUpper, ")\n")
+  local <- new.env()
+  local$toDo <- (abs(max) + abs(min)) / 2
+  redist <- function(i) {
+    if (fromLower <= i && i <= fromUpper && local$toDo > 0) {
+      local$toDo <- local$toDo - 1
+      i2 <- runif(1, toLower, toUpper)
+      cat(local$toDo, ": ", i, " -> ", i2, "\n")
+      i2
+    } else {
+      i
+    }
+  }
+  sapply(x, redist)
+}
+
 # Pick two different intervals. The output will be
 #      [,1] [,2]
 # [1,]   p1  p2
