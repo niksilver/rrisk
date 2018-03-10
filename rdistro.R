@@ -70,22 +70,26 @@ redistributeOnce <- function(intervals, x) {
       i
     }
   }
-  sapply(x, redist)
-}
-
-# Pick two different intervals. The output will be
-#      [,1] [,2]
-# [1,]   p1  p2
-# [2,]  lo1 lo2
-# [3,]  up1 up2
-
-pickTwoIntervals <- function(intervals) {
-  cols <- ncol(intervals)
-  if (is.null(cols) || cols < 2) {
-    stop("Not enough columns in intervals matrix")
+  if (is.finite(proportionToMove)) {
+    sapply(x, redist)
+  } else {
+    x
   }
-  samp <- sample(1:cols, 2, replace = FALSE)
-  out <- c( intervals[,samp[1]], intervals[,samp[2]] )
-  dim(out) <- c(3, 2)
-  out
 }
+
+# Some initial data...
+
+m1 <- addInterval(c(), 1.0, 0, 100)
+m1 <- addInterval(m1,  0.5, 0, 30)
+m1 <- addInterval(m1,  0.8, 0, 50)
+m1 <- addInterval(m1,  0.5, 30, 100)
+
+x <- runif(100, 0, 100)
+
+# Plot the initial data...
+
+# hist(x, plot = TRUE)
+
+# Redistribute once and plot
+
+# x <- redistributeOnce(m1, x); hist(x, plot = TRUE)
