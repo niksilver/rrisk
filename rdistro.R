@@ -57,14 +57,14 @@ redistributeOnce <- function(intervals, x) {
   toProb <- intervals["prob", minIdx]
   toLower <- intervals["lower", minIdx]
   toUpper <- intervals["upper", minIdx]
-  cat("(", fromLower, ", ", fromUpper, ") -> (", toLower, ", ", toUpper, ")\n")
-  local <- new.env()
-  local$toDo <- (abs(max) + abs(min)) / 2
+  countInFromRange = length( x[fromLower <= x && x <= fromUpper] )
+  countToMove = (abs(max) + abs(min)) / 2
+  proportionToMove = countToMove / countInFromRange
+  cat("(", fromLower, ", ", fromUpper, ") -> (", toLower, ", ", toUpper, "), moving ", proportionToMove, "\n")
   redist <- function(i) {
-    if (fromLower <= i && i <= fromUpper && local$toDo > 0) {
-      local$toDo <- local$toDo - 1
+    if (fromLower <= i && i <= fromUpper && runif(1) < proportionToMove) {
       i2 <- runif(1, toLower, toUpper)
-      cat(local$toDo, ": ", i, " -> ", i2, "\n")
+      cat(i, " -> ", i2, "\n")
       i2
     } else {
       i
