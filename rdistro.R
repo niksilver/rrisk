@@ -64,7 +64,7 @@ redistributeOnce <- function(intervals, x) {
   redist <- function(i) {
     if (fromLower <= i && i <= fromUpper && runif(1) < proportionToMove) {
       i2 <- runif(1, toLower, toUpper)
-      cat(i, " -> ", i2, "\n")
+      #cat(i, " -> ", i2, "\n")
       i2
     } else {
       i
@@ -80,11 +80,11 @@ redistributeOnce <- function(intervals, x) {
 # Some initial data...
 
 m1 <- addInterval(c(), 1.0, 0, 100)
-m1 <- addInterval(m1,  0.5, 0, 30)
-m1 <- addInterval(m1,  0.9, 0, 50)
-m1 <- addInterval(m1,  0.5, 30, 100)
+m1 <- addInterval(m1,  0.8, 10, 50)
+m1 <- addInterval(m1,  0.5, 15, 30)
+m1 <- addInterval(m1,  0.3, 20, 25)
 
-x <- runif(100, 0, 100)
+x <- runif(1000, 0, 100)
 
 # Plot the initial data...
 
