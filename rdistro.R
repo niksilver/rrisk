@@ -57,7 +57,7 @@ redistributeOnce <- function(intervals, x) {
   toProb <- intervals["prob", minIdx]
   toLower <- intervals["lower", minIdx]
   toUpper <- intervals["upper", minIdx]
-  countInFromRange = length( x[fromLower <= x && x <= fromUpper] )
+  countInFromRange = length( x[fromLower <= x & x <= fromUpper] )
   countToMove = (abs(max) + abs(min)) / 2
   proportionToMove = countToMove / countInFromRange
   cat("(", fromLower, ", ", fromUpper, ") -> (", toLower, ", ", toUpper, "), moving ", proportionToMove, "\n")
@@ -81,7 +81,7 @@ redistributeOnce <- function(intervals, x) {
 
 m1 <- addInterval(c(), 1.0, 0, 100)
 m1 <- addInterval(m1,  0.5, 0, 30)
-m1 <- addInterval(m1,  0.8, 0, 50)
+m1 <- addInterval(m1,  0.9, 0, 50)
 m1 <- addInterval(m1,  0.5, 30, 100)
 
 x <- runif(100, 0, 100)
@@ -93,3 +93,6 @@ x <- runif(100, 0, 100)
 # Redistribute once and plot
 
 # x <- redistributeOnce(m1, x); hist(x, plot = TRUE)
+
+# or...
+# x <- redistributeOnce(m1, x); plot(density(x, from=0, to=100))
