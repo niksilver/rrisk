@@ -45,7 +45,6 @@ addInterval <- function(intervals, prob, lower, upper) {
 
 redistributeOnce <- function(intervals, x) {
   scores <- scores(intervals, x)
-  cat("scores = ", scores, "\n")
   minmax <- range( scores )
   min <- minmax[1]
   max <- minmax[2]
@@ -60,12 +59,9 @@ redistributeOnce <- function(intervals, x) {
   countInFromRange = length( x[fromLower <= x & x <= fromUpper] )
   countToMove = (abs(max) + abs(min)) / 2
   proportionToMove = countToMove / countInFromRange
-  cat("(", fromLower, ", ", fromUpper, ") -> (", toLower, ", ", toUpper, "), moving ", proportionToMove, "\n")
   redist <- function(i) {
     if (fromLower <= i && i <= fromUpper && runif(1) < proportionToMove) {
-      i2 <- runif(1, toLower, toUpper)
-      #cat(i, " -> ", i2, "\n")
-      i2
+      runif(1, toLower, toUpper)
     } else {
       i
     }
@@ -77,12 +73,26 @@ redistributeOnce <- function(intervals, x) {
   }
 }
 
+distribute <- function(intervals, size = 1000, iterations = 100) {
+  lower <- min(intervals["lower",])
+  upper <- max(intervals["upper",])
+  x <- runif(size, lower, upper)
+  for (it in 1:iterations) {
+    x <- redistributeOnce(intervals, x)
+  }
+  x
+}
+
 # Some initial data...
 
+# m1 <- addInterval(c(), 1.0, 0, 100)
+# m1 <- addInterval(m1,  0.8, 10, 50)
+# m1 <- addInterval(m1,  0.5, 15, 30)
+# m1 <- addInterval(m1,  0.3, 20, 25)
+
 m1 <- addInterval(c(), 1.0, 0, 100)
-m1 <- addInterval(m1,  0.8, 10, 50)
-m1 <- addInterval(m1,  0.5, 15, 30)
-m1 <- addInterval(m1,  0.3, 20, 25)
+m1 <- addInterval(m1,  0.5, 0, 25)
+m1 <- addInterval(m1,  0.5, 75, 100)
 
 x <- runif(1000, 0, 100)
 
